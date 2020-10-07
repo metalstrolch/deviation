@@ -62,6 +62,15 @@
 #define VOLTAGE_NUMERATOR 216
 #define VOLTAGE_OFFSET    249
 
+#define SPI2_CFG ((struct spi_config) {    \
+    .spi = SPI2,                           \
+    .sck = {GPIOB, GPIO13},                \
+    .miso = {GPIOB, GPIO14},               \
+    .mosi = {GPIOB, GPIO15},               \
+    .rate = SPI_CR1_BR_FPCLK_DIV_16,       \
+    DEFAULT_SPI_SETTINGS,                  \
+})
+
 #include "hardware.h"
 #include "../common/common_devo.h"
 
