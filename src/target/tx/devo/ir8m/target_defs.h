@@ -30,6 +30,10 @@
 #define HAS_MUSIC_CONFIG    1
 #define HAS_USB_DRIVE_ERASE 1
 
+#define HAS_ANTENNA_SWITCH  1
+#define PE1_PIN ((struct mcu_pin) {GPIOB, GPIO11})
+#define PE2_PIN ((struct mcu_pin) {GPIOB, GPIO11})
+
 #define SUPPORT_CRSF_CONFIG 1
 
 #ifdef BUILDTYPE_DEV

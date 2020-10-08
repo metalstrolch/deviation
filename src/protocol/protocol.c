@@ -81,6 +81,51 @@ const struct{
 #undef PROTODEF
 #endif
 
+#ifndef HAS_ANTENNA_SWITCH
+#define HAS_ANTENNA_SWITCH 0
+#endif
+
+#if HAS_ANTENNA_SWITCH
+static void ANTENNA_SwitchInit()
+{
+   GPIO_setup_output(PE1_PIN, OTYPE_PUSHPULL);
+   GPIO_setup_output(PE2_PIN, OTYPE_PUSHPULL);
+}
+
+static void ANTENNA_SwitchTo(int module)
+{
+   switch(module)
+   {
+#ifdef PROTO_HAS_CYTF6936
+      case CYRF6936:
+         GPIO_pin_set(PE1_PIN);
+         GPIO_pin_set(PE2_PIN);
+      break;
+#endif
+#ifdef PROTO_HAS_NRF24L01
+      case NRF24L01:
+         GPIO_pin_set(PE1_PIN);
+         GPIO_pin_clear(PE2_PIN);
+      break;
+#endif
+#ifdef PROTO_HAS_CC2500
+      case CC2500:
+         GPIO_pin_clear(PE1_PIN);
+         GPIO_pin_set(PE2_PIN);
+      break;
+#endif
+#ifdef PROTO_HAS_A7105
+      case A7105:
+         GPIO_pin_clear(PE1_PIN);
+         GPIO_pin_clear(PE2_PIN);
+      break;
+#endif
+      default:
+      break;
+   }
+}
+#endif
+
 static int get_module(u16 idx);
 
 const char * PROTOCOL_GetName(u16 idx)
@@ -106,6 +151,9 @@ void PROTOCOL_Init(u8 force)
         return;
     PROTOCOL_DeInit();
     PROTOCOL_Load(0);
+#if HAS_ANTENNA_SWITCH
+    ANTENNA_SwitchInit():
+#endif
     proto_state = PROTO_INIT;
     if (! force && PROTOCOL_CheckSafe()) {
         return;
@@ -591,8 +639,12 @@ void PROTO_CS_HI(int module)
 #endif
 }
 
+
 void PROTO_CS_LO(int module)
 {
+#if HAS_ANTENNA_SWITCH
+    ANTENNA_SwitchTo(module);
+#endif
 #if HAS_4IN1_FLASH
     if (SPISwitch_Present()) {
         SPISwitch_CS_LO(module);
