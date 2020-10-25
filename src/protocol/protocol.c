@@ -152,7 +152,7 @@ void PROTOCOL_Init(u8 force)
     PROTOCOL_DeInit();
     PROTOCOL_Load(0);
 #if HAS_ANTENNA_SWITCH
-    ANTENNA_SwitchInit():
+    ANTENNA_SwitchInit();
 #endif
     proto_state = PROTO_INIT;
     if (! force && PROTOCOL_CheckSafe()) {

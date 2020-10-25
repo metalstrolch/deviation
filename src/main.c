@@ -201,6 +201,49 @@ void Banner()
 
 }
 
+#ifndef SEARCH_GPIO_TOGGLE
+#define SEARCH_GPIO_TOGGLE 0
+#endif
+
+#if SEARCH_GPIO_TOGGLE
+/* this is called from main loop and may toggle PE1_PIN once a second.
+ * This is quite helpful to find free GPIO pins by simple measuring devices
+ * like multimeters. As you just need to probe for the pin toggling once
+ * a second. Was quite helpful so I kept it in.
+ * - metalstrolch -
+ */
+static void TOGGLE_pin()
+{
+    static u8 state = 0;
+    static u32 last = 0;
+    u32 t = CLOCK_getms();
+
+    if(last !=0)
+    {
+        if((t - last) > 1000)
+        {
+	    last = t;
+            if(state == 0)
+	    {
+                state = 1;
+                GPIO_pin_set(PE1_PIN);
+            }
+            else
+            {
+                state = 0;
+                GPIO_pin_clear(PE1_PIN);
+            }
+        }
+    }
+    else
+    {
+        GPIO_setup_output(PE1_PIN, OTYPE_PUSHPULL);
+        last = t;
+    }
+
+}
+#endif
+
 void EventLoop()
 {
     CLOCK_ResetWatchdog();
@@ -275,6 +318,9 @@ void EventLoop()
         if (PAGE_ModelDoneEditing())
             CONFIG_SaveModelIfNeeded();
         CONFIG_SaveTxIfNeeded();
+#endif
+#if SEARCH_GPIO_TOGGLE
+        TOGGLE_pin();
 #endif
     }
 #ifdef TIMING_DEBUG

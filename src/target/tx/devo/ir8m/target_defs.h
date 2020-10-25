@@ -31,8 +31,8 @@
 #define HAS_USB_DRIVE_ERASE 1
 
 #define HAS_ANTENNA_SWITCH  1
-#define PE1_PIN ((struct mcu_pin) {GPIOB, GPIO11})
-#define PE2_PIN ((struct mcu_pin) {GPIOB, GPIO11})
+#define PE1_PIN ((struct mcu_pin) {GPIOB, GPIO3})
+#define PE2_PIN ((struct mcu_pin) {GPIOA, GPIO8})
 
 #define SUPPORT_CRSF_CONFIG 1
 
