@@ -96,7 +96,7 @@ static void ANTENNA_SwitchTo(int module)
 {
    switch(module)
    {
-#ifdef PROTO_HAS_CYTF6936
+#ifdef PROTO_HAS_CYRF6936
       case CYRF6936:
          GPIO_pin_set(PE1_PIN);
          GPIO_pin_set(PE2_PIN);
